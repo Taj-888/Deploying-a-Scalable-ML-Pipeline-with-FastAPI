@@ -34,7 +34,7 @@ model = load_model(path)
 
 # TODO: create a RESTful API using FastAPI
 app = None # your code here
-
+#test
 # TODO: create a GET on the root giving a welcome message
 @app.get("/")
 async def get_root():
