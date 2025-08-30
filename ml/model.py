@@ -86,7 +86,7 @@ def save_model(model: Any, path: str)-> None:
     path : str
         Path to save pickle file.
     """
-    # TODO: implement the function
+
     p= Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
     with open(path, 'wb') as f:
@@ -100,14 +100,15 @@ def load_model(path: str) -> Any:
 
 
 def performance_on_categorical_slice(
-        data: pd.DataFrame,
+        df,
         column_name: str,
-        slice_value: Any,
-        categorical_features: list,
-        label: str,
-        encoder: Any,
-        lb: Any,
-        model: Any,
+        slice_value,
+        *,
+        encoder,
+        lb,
+        model,
+        categorical_features,
+        label: str = "salary",
 ) -> Tuple[float, float, float]:
     """ Computes the model metrics on a slice of the data specified by a column name and
 
@@ -143,23 +144,21 @@ def performance_on_categorical_slice(
 
     """
     # TODO: implement the function
-    slice_df = data[data[column_name] == slice_value].copy()
-    if slice_df.empty:
-        raise ValueError(
-            f"No rows found for slice: {column_name} == {slice_value!r}"
-        )
-    # Process with the *trained* encoder/label binarizer
-    X_slice, y_slice, _, _ = process_data(
 
-        # for input data, use data in column given as "column_name", with the slice_value 
-        # use training = False
+    slice_df = df[df[column_name] == slice_value].copy()
+    if slice_df.empty:
+        return float("nan"), float("nan"), float("nan")
+
+    # Process with the trained encoder/label binarizer
+    X_slice, y_slice, _, _ = process_data(
         slice_df,
         categorical_features=categorical_features,
-        label=label,
+        label=label,  # <-- string label, not lb
         training=False,
         encoder=encoder,
-        lb=lb
+        lb=lb,
     )
+
     preds = inference(model, X_slice) # your code here to get prediction on X_slice using the inference function
     precision, recall, fbeta = compute_model_metrics(y_slice, preds)
     return precision, recall, fbeta
