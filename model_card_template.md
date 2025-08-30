@@ -14,7 +14,11 @@ For additional information see the Model Card paper: https://arxiv.org/pdf/1810.
 - **Categorical features:** `workclass, education, marital-status, occupation, relationship, race, sex, native-country`
 - **Split:** 80/20 train/test (stratified), `random_state=42`.
 ## Evaluation Data
-
+- Dataset: `data/census.csv` (Adult Census Income).
+- Hold-out split: 80/20, stratified by `salary` (`random_state=42`).
+- Preprocessing: Reuse the trained one-hot encoder and label binarizer on test data (no leakage).
+- Positive class / threshold: `>50K` at 0.5.
+- Slice metrics: Per-value Precision/Recall/F1 for each of `workclass`, `education`, `marital-status`, `occupation`, `relationship`, `race`, `sex`, `native-country`; saved with counts to `slice_output.txt`.
 ## Metrics
 _Please include the metrics used and your model's performance on those metrics._
 - **Precision:** `0.7417`
